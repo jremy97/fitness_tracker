@@ -110,6 +110,42 @@ class HealthDatabase:
             worksheet.append_row([user_id, username, email, config.TIMEZONE])
             print(f"Saved new configuration for user Username={username}")
 
+    def get_user_email(self, user_id):
+        """
+        Retrieves the user's email address from the Google Sheet based on their user ID.
+        
+        Args:
+        - user_id: Unique identifier for the user (e.g., Telegram user ID)
+        
+        Returns:
+        - string: User's email address if found, otherwise None
+        """
+
+        worksheet = self.sheet.worksheet("User_Config")
+
+        try:
+            cell = worksheet.find(str(user_id))
+            row_values = worksheet.row_values(cell.row)
+            return row_values[2] # Email is in 3rd column (index 2)
+        except:
+            print(f"No email found for user ID {user_id}")
+            return None
+    def get_weekly_data(self, user_id):
+        """
+        Retrieves the user's weight and blood pressure data for the past week from the Google Sheet.
+        
+        Args:
+        - user_id: Unique identifier for the user (e.g., Telegram user ID)
+        
+        Returns:
+        - list of dicts: Each dict contains 'timestamp', 'weight', 'systolic', 'diastolic' for each entry
+        """
+
+        worksheet = self.sheet.worksheet("Weight_BP_Log")
+
+        all_records = worksheet.get_all_records()
+
+
 
 
 
