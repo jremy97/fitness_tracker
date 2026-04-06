@@ -143,7 +143,29 @@ class HealthDatabase:
 
         worksheet = self.sheet.worksheet("Weight_BP_Log")
 
+        # Get all records from the worksheet as list of dictionaries
         all_records = worksheet.get_all_records()
+
+        # Get the date one week ago from today
+        one_week_ago = datetime.now() - timedelta(days=7)
+
+        # Use weekly_data to store the filtered results
+        weekly_data = []
+
+        for record in all_records:
+            # Is record in the past week and belongs to the user?
+            if str(record.get('user_id')) == user_id:
+                try:
+                    # Parse timestamp and convert back to datetime
+                    record_time = datetime.strptime(record['timestamp'], "%Y-%m-%d %H:%M:%S")
+                    if record_time >= one_week_ago:
+                        weekly_data.append(record)
+                except: 
+                    continue
+                
+        return weekly_data
+    
+
 
 
 
